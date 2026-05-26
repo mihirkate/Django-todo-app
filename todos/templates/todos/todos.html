@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background: #f5f5f5;
+            color: #222;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        h1, h2 {
+            margin-top: 0;
+        }
+
+        form {
+            margin-bottom: 32px;
+        }
+
+        form p {
+            margin-bottom: 14px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="checkbox"] {
+            width: auto;
+        }
+
+        button {
+            padding: 10px 16px;
+            border: 0;
+            border-radius: 4px;
+            background: #2563eb;
+            color: white;
+            cursor: pointer;
+        }
+
+        .todo-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .todo-item {
+            padding: 14px;
+            margin-bottom: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: #fafafa;
+        }
+
+        .todo-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .todo-meta {
+            color: #555;
+            font-size: 14px;
+        }
+
+        .empty {
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Todos</h1>
+
+        <h2>Create Todo</h2>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Save Todo</button>
+        </form>
+
+        <h2>Todo List</h2>
+        {% if todos %}
+            <ul class="todo-list">
+                {% for todo in todos %}
+                    <li class="todo-item">
+                        <div class="todo-title">{{ todo.title }}</div>
+                        <div>{{ todo.description }}</div>
+                        <div class="todo-meta">
+                            Status:
+                            {% if todo.done %}
+                                Done
+                            {% else %}
+                                Pending
+                            {% endif %}
+                            |
+                            Deadline:
+                            {% if todo.deadline %}
+                                {{ todo.deadline }}
+                            {% else %}
+                                No deadline
+                            {% endif %}
+                            |
+                            Priority:
+                            {% if todo.priority %}
+                                {{ todo.get_priority_display }}
+                            {% else %}
+                                No priority
+                            {% endif %}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="empty">No todos created yet.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
